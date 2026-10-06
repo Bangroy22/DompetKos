@@ -26,24 +26,12 @@ export default function SplashScreen() {
           Kawan setia uang jajanmu 🎓
         </p>
 
-        {/* Fitur unggulan */}
-        <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
-          {["⚡ Catat kilat", "🎯 Budget kategori", "🤖 Insight AI"].map((f) => (
-            <span
-              key={f}
-              className="rounded-full bg-white/15 px-3 py-1.5 text-xs font-bold text-white ring-1 ring-white/25 backdrop-blur"
-            >
-              {f}
-            </span>
-          ))}
-        </div>
-
         {/* Tombol mulai */}
         <Link
           href="/login"
           className="mt-8 w-full rounded-2xl bg-white py-4 text-center text-base font-extrabold text-[#047857] shadow-xl shadow-black/20 ring-2 ring-[#D4AF37]/70 transition active:scale-[0.98]"
         >
-          🚀 Mulai
+          Mulai
         </Link>
 
         <p className="mt-4 text-[11px] font-medium leading-relaxed text-emerald-50/70">
