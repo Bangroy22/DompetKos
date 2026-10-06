@@ -22,9 +22,13 @@ export async function POST() {
   }
 
   const supabase = await createClient();
+  // Pakai getSession (baca dari cookie, tanpa request jaringan) — server auth
+  // Supabase sedang lambat abnormal, getUser() bikin endpoint ini nunggu 6-18 detik.
+  // Keamanan data tetap dijamin RLS yang memvalidasi JWT di setiap query.
   const {
-    data: { user },
-  } = await supabase.auth.getUser();
+    data: { session },
+  } = await supabase.auth.getSession();
+  const user = session?.user ?? null;
 
   if (!user) {
     return NextResponse.json({ error: "Belum login" }, { status: 401 });
@@ -51,6 +55,9 @@ export async function POST() {
   // Coba Gemini — key HANYA dipakai di server, tidak pernah ke browser
   const apiKey = process.env.GEMINI_API_KEY;
   if (apiKey) {
+    // Timeout 20 detik: kalau Gemini lemot/sibuk, langsung fallback ke analisis lokal
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 20000);
     try {
       const summary = buildMonthSummary(exp, bud, month);
       const res = await fetch(
@@ -58,6 +65,7 @@ export async function POST() {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
+          signal: ctrl.signal,
           body: JSON.stringify({
             contents: [
               {
@@ -84,12 +92,14 @@ export async function POST() {
         const text: string | undefined =
           json.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
         if (text) {
+          clearTimeout(timer);
           return NextResponse.json({ insight: text, source: "gemini" });
         }
       }
     } catch {
-      // Gagal → fallback ke analisis lokal di bawah
+      // Gagal / timeout → fallback ke analisis lokal di bawah
     }
+    clearTimeout(timer);
   }
 
   return NextResponse.json({

@@ -58,7 +58,7 @@ export default function InsightCard() {
           disabled={loading}
           className="mt-3 w-full rounded-2xl bg-gradient-to-r from-glow-500 to-amber-400 py-3 text-sm font-extrabold text-white shadow-lg shadow-amber-500/25 transition active:scale-[0.98] disabled:opacity-60"
         >
-          {loading ? "⏳ Lagi mikir..." : "✨ Minta Insight AI"}
+          {loading ? "⏳ Thinking..." : "✨ Minta Insight AI"}
         </button>
       </div>
     </section>
