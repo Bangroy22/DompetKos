@@ -68,8 +68,8 @@ export function localInsight(
 ): string {
   if (expenses.length === 0) {
     return (
-      `Belum ada pengeluaran yang tercatat di ${namaBulan(month)}. ` +
-      "Yuk mulai catat pengeluaran harianmu — cukup 10 detik per transaksi — biar polanya kebaca dan DompetKos bisa kasih saran hemat yang pas buat kamu. 💪"
+      `Dompet masih perawan nih di ${namaBulan(month)} — belum ada pengeluaran tercatat sama sekali. ` +
+      "Catat pengeluaranmu, cukup 10 detik per transaksi. Biar nanti polanya bisa dibaca dan dompetmu bisa diroasting dengan data yang valid. 😎"
     );
   }
 
@@ -85,8 +85,8 @@ export function localInsight(
 
   const parts: string[] = [];
   parts.push(
-    `Bulan ini kamu sudah mengeluarkan ${formatRupiah(total)} dalam ${expenses.length} transaksi. ` +
-      `Kategori paling boros: ${meta.emoji} ${topCat} sebesar ${formatRupiah(topAmt)} (${pct}% dari total).`
+    `Bulan ini dompetmu sudah berkurang ${formatRupiah(total)} dalam ${expenses.length} transaksi. ` +
+      `Tersangka utama: ${meta.emoji} ${topCat} — nyedot ${formatRupiah(topAmt)} alias ${pct}% dari total. Dia nih yang wajib diinterogasi. 🕵️`
   );
 
   const totalBudget = toNum(
@@ -96,15 +96,15 @@ export function localInsight(
     const used = Math.round((total / totalBudget) * 100);
     if (used >= 100) {
       parts.push(
-        `Budget ${formatRupiah(totalBudget)} sudah jebol (${used}% terpakai)! Waktunya mode hemat sampai akhir bulan. 🛑`
+        `Budget ${formatRupiah(totalBudget)} resmi DINYATAKAN JEBOL (${used}% terpakai)! Sisa bulan ini mode bertahan hidup: mie instan sahabat, nongkrong musuh. 🛑`
       );
     } else if (used >= 80) {
       parts.push(
-        `Budget sudah terpakai ${used}% — sisa ${formatRupiah(totalBudget - total)}. Rem sedikit ya! ⚠️`
+        `Budget udah kepake ${used}% — sisa ${formatRupiah(totalBudget - total)}. Ibarat bensin, ini udah nyala lampu merah. Rem dikit, masih bisa selamat! ⚠️`
       );
     } else {
       parts.push(
-        `Budget baru terpakai ${used}%, masih aman. Sisa ${formatRupiah(totalBudget - total)} buat sampai akhir bulan. ✅`
+        `Budget baru kepake ${used}%, masih ijo! Sisa ${formatRupiah(totalBudget - total)} buat sampai akhir bulan. Pertahankan, calon sultan kos. ✅`
       );
     }
   }
@@ -112,18 +112,18 @@ export function localInsight(
   // Saran hemat berdasarkan kategori terbesar
   const saran: Record<string, string> = {
     "Makan":
-      "Coba masak 2–3 kali seminggu atau cari warteg langganan — biasanya bisa pangkas 20–30% budget makan.",
+      "Masak 2–3 kali seminggu atau cari warteg langganan — perut kenyang, dompet nggak nangis. Potensi pangkas 20–30%!",
     "Kopi/Jajan":
-      "Kurangi 1 gelas kopi kekinian per minggu dan ganti kopi sachet — hematnya bisa sampai Rp150rb sebulan!",
+      "Skip 1 kopi kekinian seminggu, ganti kopi sachet. Lidah mungkin protes, tapi dompet tepuk tangan — bisa hemat sampai Rp150rb sebulan!",
     "Transport":
-      "Kalau jaraknya dekat, jalan kaki atau nebeng teman bisa motong ongkos harian lumayan.",
+      "Jarak dekat? Jalan kaki sekalian olahraga, atau nebeng teman sekalian nambah pahala. Ongkos langsung kepangkas.",
     "Hiburan":
-      "Tetapkan 'jatah hiburan' mingguan biar nggak kebablasan — misal maksimal Rp50rb per minggu.",
-    "Kos": "Cek lagi langganan yang nempel di kos (wifi, streaming) — yang jarang dipakai, stop aja.",
+      "Kasih 'jatah hiburan' mingguan, misal maksimal Rp50rb. Hiburan boleh, yang penting dompet nggak ikut terhibur sampai kosong.",
+    "Kos": "Audit langganan kosan (wifi, streaming). Yang jarang dipakai itu sumbangan sukarela ke perusahaan — stop aja!",
     "Lainnya":
-      "Kategori Lainnya gede biasanya tanda banyak pengeluaran impulsif. Catat niat beli 24 jam sebelum checkout!",
+      "Kategori Lainnya gede = banyak checkout impulsif. Terapkan aturan 24 jam: pengen beli? Tunggu besok. 90% keinginan hilang sendiri.",
   };
-  parts.push(`💡 Saran hemat: ${saran[topCat] ?? saran["Lainnya"]}`);
+  parts.push(`💡 Saran serius (tapi santai): ${saran[topCat] ?? saran["Lainnya"]}`);
 
   return parts.join(" ");
 }

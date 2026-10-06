@@ -28,7 +28,7 @@ export default function InsightCard() {
     <section className="overflow-hidden rounded-3xl border border-brand-100 bg-white shadow-lg shadow-brand-600/5">
       <div className="flex items-center justify-between bg-gradient-to-r from-brand-700 to-brand-600 px-4 py-3">
         <h2 className="text-sm font-extrabold text-white">
-          🤖 Insight AI Bulan Ini
+          🤖 Insight
         </h2>
         {source && (
           <span className="rounded-full bg-white/20 px-2.5 py-0.5 text-[10px] font-bold text-white">
