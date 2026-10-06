@@ -92,6 +92,10 @@ export default async function PengaturanPage() {
 
       <p className="pb-4 text-center text-xs text-slate-400">
         DompetKos 💚 — dibuat untuk anak kos Indonesia
+        <br />
+        <span className="text-[11px] font-semibold">
+          oleh <span className="font-extrabold text-slate-500">rhsdigital</span>
+        </span>
       </p>
     </div>
   );

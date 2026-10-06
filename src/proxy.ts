@@ -39,8 +39,11 @@ export async function proxy(request: NextRequest) {
       }
     );
 
-    const { data } = await supabase.auth.getUser();
-    user = data.user;
+    // Proteksi route memakai getSession() (baca dari cookie, tanpa request
+    // jaringan) agar navigasi antar-halaman tidak delay. Keamanan data tetap
+    // dijamin RLS Supabase yang memvalidasi JWT di setiap query.
+    const { data } = await supabase.auth.getSession();
+    user = data.session?.user ?? null;
   } catch {
     // Supabase tidak terjangkau / key salah → anggap belum login
     user = null;

@@ -93,6 +93,9 @@ export default async function Home() {
           <h2 className="text-xl font-extrabold tracking-tight text-slate-800">
             {namaBulan(month)}
           </h2>
+          <p className="text-[10px] font-semibold tracking-wide text-slate-400">
+            oleh rhsdigital
+          </p>
         </div>
         <Link
           href="/catat"
@@ -103,11 +106,11 @@ export default async function Home() {
       </div>
 
       {/* Kartu sisa uang */}
-      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-800 via-brand-600 to-brand-500 p-5 text-white shadow-xl shadow-brand-600/25">
+      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-800 via-brand-600 to-brand-500 p-5 text-white shadow-xl shadow-brand-600/25 ring-1 ring-gold-300/40">
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute -right-8 -top-10 h-40 w-40 rounded-full bg-white/10" />
           <div className="absolute -bottom-10 -left-6 h-28 w-28 rounded-full bg-white/10" />
-          <div className="absolute right-16 top-8 h-10 w-10 rounded-full bg-glow-400/30" />
+          <div className="absolute right-16 top-8 h-10 w-10 rounded-full bg-gold-400/30" />
         </div>
         <p className="relative text-xs font-bold uppercase tracking-wider text-white/80">
           💸 Sisa uang bulan ini
@@ -123,8 +126,8 @@ export default async function Home() {
           <div
             className={`h-full rounded-full transition-all ${
               overBudget
-                ? "bg-glow-400"
-                : "bg-gradient-to-r from-glow-400 to-amber-300"
+                ? "bg-gold-400"
+                : "bg-gradient-to-r from-gold-500 via-gold-300 to-gold-400"
             }`}
             style={{
               width: totalBudget > 0 ? `${Math.min((totalSpent / totalBudget) * 100, 100)}%` : "0%",

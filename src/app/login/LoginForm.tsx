@@ -184,9 +184,12 @@ export default function LoginForm() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-2xl bg-gradient-to-r from-brand-700 to-brand-500 py-3.5 text-sm font-extrabold text-white shadow-lg shadow-brand-600/30 transition active:scale-[0.98] disabled:opacity-60"
+            className="relative w-full overflow-hidden rounded-2xl bg-gradient-to-r from-brand-800 via-brand-600 to-brand-500 py-3.5 text-sm font-extrabold text-white shadow-lg shadow-brand-600/30 transition active:scale-[0.98] disabled:opacity-60"
           >
-            {loading ? "⏳ Tunggu..." : mode === "login" ? "🚀 Masuk" : "🎉 Buat Akun"}
+            <span className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-gold-300/25 to-transparent" />
+            <span className="relative">
+              {loading ? "⏳ Tunggu..." : mode === "login" ? "🚀 Masuk" : "🎉 Buat Akun"}
+            </span>
           </button>
         </form>
 
@@ -225,6 +228,9 @@ export default function LoginForm() {
 
       <p className="mt-5 text-center text-xs text-slate-400">
         Datamu aman & privat — hanya kamu yang bisa lihat 🔒
+      </p>
+      <p className="mt-1.5 text-center text-[11px] font-semibold text-slate-400">
+        Dibuat oleh <span className="font-extrabold text-slate-500">rhsdigital</span>
       </p>
     </div>
   );
