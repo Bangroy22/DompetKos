@@ -94,7 +94,7 @@ export default async function Home() {
             {namaBulan(month)}
           </h2>
           <p className="text-[10px] font-semibold tracking-wide text-slate-400">
-            oleh rhsdigital
+            Made by rhsdigital
           </p>
         </div>
         <Link

@@ -230,7 +230,7 @@ export default function LoginForm() {
         Datamu aman & privat — hanya kamu yang bisa lihat 🔒
       </p>
       <p className="mt-1.5 text-center text-[11px] font-semibold text-slate-400">
-        Dibuat oleh <span className="font-extrabold text-slate-500">rhsdigital</span>
+        Made by <span className="font-extrabold text-slate-500">rhsdigital</span>
       </p>
     </div>
   );

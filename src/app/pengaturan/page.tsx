@@ -94,7 +94,7 @@ export default async function PengaturanPage() {
         DompetKos 💚 — dibuat untuk anak kos Indonesia
         <br />
         <span className="text-[11px] font-semibold">
-          oleh <span className="font-extrabold text-slate-500">rhsdigital</span>
+          Made by <span className="font-extrabold text-slate-500">rhsdigital</span>
         </span>
       </p>
     </div>

@@ -7,7 +7,7 @@ import { LogoMark } from "./Logo";
  */
 export default function SplashScreen() {
   return (
-    <div className="relative flex min-h-[100dvh] flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-[#064e3b] via-[#047857] to-[#10b981] px-6 py-10">
+    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center overflow-y-auto bg-gradient-to-b from-[#064e3b] via-[#047857] to-[#10b981] px-6 py-10">
       {/* Lingkaran dekorasi */}
       <div className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-white/10" />
       <div className="pointer-events-none absolute -bottom-28 -right-24 h-80 w-80 rounded-full bg-white/10" />
@@ -54,7 +54,7 @@ export default function SplashScreen() {
       </div>
 
       <p className="relative mt-10 text-xs font-semibold text-white/60">
-        Dibuat oleh <span className="font-extrabold text-[#e9c767]">rhsdigital</span>
+        Made by <span className="font-extrabold text-[#e9c767]">rhsdigital</span>
       </p>
     </div>
   );
