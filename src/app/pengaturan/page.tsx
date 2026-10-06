@@ -1,5 +1,8 @@
-import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 import { currentMonth, namaBulan } from "@/lib/format";
 import {
   DisplayNameForm,
@@ -8,34 +11,80 @@ import {
 } from "./SettingsForms";
 import SetupNotice from "@/components/SetupNotice";
 
-export const dynamic = "force-dynamic";
+interface Budget {
+  category: string;
+  amount: number;
+}
 
-export default async function PengaturanPage() {
-  if (
-    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
-    !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  ) {
-    return <SetupNotice />;
-  }
-
-  const supabase = await createClient();
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-  const user = session?.user ?? null;
-  if (!user) redirect("/login");
-
+export default function PengaturanPage() {
+  const router = useRouter();
+  const [status, setStatus] = useState<"loading" | "setup" | "ready">("loading");
+  const [displayName, setDisplayName] = useState("");
+  const [email, setEmail] = useState("");
+  const [budgets, setBudgets] = useState<Budget[]>([]);
+  const [geminiAktif, setGeminiAktif] = useState(false);
   const month = currentMonth();
-  const [{ data: profile }, { data: budgets }] = await Promise.all([
-    supabase.from("profiles").select("display_name").eq("id", user.id).single(),
-    supabase
-      .from("budgets")
-      .select("category, amount")
-      .eq("user_id", user.id)
-      .eq("month", month),
-  ]);
 
-  const geminiAktif = Boolean(process.env.GEMINI_API_KEY);
+  useEffect(() => {
+    (async () => {
+      if (
+        !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+        !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+      ) {
+        setStatus("setup");
+        return;
+      }
+      const supabase = createClient();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      const user = session?.user ?? null;
+      if (!user) {
+        router.replace("/login");
+        return;
+      }
+      const [{ data: profile }, { data: b }, statusRes] = await Promise.all([
+        supabase
+          .from("profiles")
+          .select("display_name")
+          .eq("id", user.id)
+          .single(),
+        supabase
+          .from("budgets")
+          .select("category, amount")
+          .eq("user_id", user.id)
+          .eq("month", month),
+        fetch("/api/status").then((r) => r.json()).catch(() => ({})),
+      ]);
+      setDisplayName(
+        (profile as { display_name?: string } | null)?.display_name ?? ""
+      );
+      setEmail(user.email ?? "");
+      setBudgets(
+        (b ?? []).map((x) => ({
+          category: x.category,
+          amount: Number(x.amount) || 0,
+        }))
+      );
+      setGeminiAktif(Boolean((statusRes as { gemini?: boolean }).gemini));
+      setStatus("ready");
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  if (status === "loading") {
+    return (
+      <div className="space-y-4" aria-label="Memuat pengaturan">
+        <div className="h-8 w-40 animate-pulse rounded-2xl bg-white" />
+        <div className="h-36 animate-pulse rounded-3xl bg-white" />
+        <div className="h-64 animate-pulse rounded-3xl bg-white" />
+        <p className="py-2 text-center text-xs font-bold text-slate-400">
+          ⏳ Memuat pengaturan...
+        </p>
+      </div>
+    );
+  }
+  if (status === "setup") return <SetupNotice />;
 
   return (
     <div className="space-y-4">
@@ -44,8 +93,8 @@ export default async function PengaturanPage() {
       {/* Profil */}
       <section className="space-y-3 rounded-3xl border border-brand-100 bg-white p-4 shadow-lg shadow-brand-600/5">
         <h3 className="text-sm font-extrabold text-slate-800">👤 Profil</h3>
-        <DisplayNameForm initial={profile?.display_name ?? ""} />
-        <p className="text-xs font-semibold text-slate-400">📧 {user.email}</p>
+        <DisplayNameForm initial={displayName} />
+        <p className="text-xs font-semibold text-slate-400">📧 {email}</p>
       </section>
 
       {/* Budget */}
@@ -53,12 +102,7 @@ export default async function PengaturanPage() {
         <h3 className="mb-3 text-sm font-extrabold text-slate-800">
           💰 Budget — {namaBulan(month)}
         </h3>
-        <BudgetForm
-          initial={(budgets ?? []).map((b) => ({
-            category: b.category,
-            amount: Number(b.amount) || 0,
-          }))}
-        />
+        <BudgetForm initial={budgets} />
       </section>
 
       {/* Status AI */}

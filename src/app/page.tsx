@@ -1,5 +1,8 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/client";
 import { currentMonth, formatRupiah, namaBulan } from "@/lib/format";
 import { CATEGORIES, categoryMeta } from "@/lib/categories";
 import DonutChart from "@/components/DonutChart";
@@ -7,51 +10,106 @@ import DailyChart from "@/components/DailyChart";
 import SetupNotice from "@/components/SetupNotice";
 import SplashScreen from "@/components/SplashScreen";
 
-export const dynamic = "force-dynamic";
+interface Expense {
+  id: string;
+  amount: number;
+  category: string;
+  spent_at: string;
+}
 
-export default async function Home() {
-  if (
-    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
-    !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  ) {
-    return <SetupNotice />;
-  }
+interface Budget {
+  category: string;
+  amount: number;
+}
 
-  const supabase = await createClient();
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-  const user = session?.user ?? null;
-  if (!user) return <SplashScreen />;
+type Status = "loading" | "setup" | "splash" | "ready";
 
+function Skeleton() {
+  return (
+    <div className="space-y-4" aria-label="Memuat dashboard">
+      <div className="h-16 animate-pulse rounded-3xl bg-white" />
+      <div className="h-44 animate-pulse rounded-3xl bg-gradient-to-br from-brand-100 to-brand-50" />
+      <div className="h-32 animate-pulse rounded-3xl bg-white" />
+      <div className="grid grid-cols-2 gap-4">
+        <div className="h-48 animate-pulse rounded-3xl bg-white" />
+        <div className="h-48 animate-pulse rounded-3xl bg-white" />
+      </div>
+      <p className="py-2 text-center text-xs font-bold text-slate-400">
+        ⏳ Memuat datamu...
+      </p>
+    </div>
+  );
+}
+
+export default function Home() {
+  const [status, setStatus] = useState<Status>("loading");
+  const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [budgets, setBudgets] = useState<Budget[]>([]);
+  const [nama, setNama] = useState("Sobat Kos");
   const month = currentMonth();
 
-  const [{ data: expenses }, { data: budgets }, { data: profile }] =
-    await Promise.all([
-      supabase
-        .from("expenses")
-        .select("id, amount, category, spent_at")
-        .eq("user_id", user.id)
-        .gte("spent_at", `${month}-01`)
-        .order("spent_at", { ascending: true }),
-      supabase
-        .from("budgets")
-        .select("category, amount")
-        .eq("user_id", user.id)
-        .eq("month", month),
-      supabase.from("profiles").select("display_name").eq("id", user.id).single(),
-    ]);
+  useEffect(() => {
+    (async () => {
+      if (
+        !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+        !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+      ) {
+        setStatus("setup");
+        return;
+      }
+      const supabase = createClient();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      const user = session?.user ?? null;
+      if (!user) {
+        setStatus("splash");
+        return;
+      }
+      const [{ data: e }, { data: b }, { data: p }] = await Promise.all([
+        supabase
+          .from("expenses")
+          .select("id, amount, category, spent_at")
+          .eq("user_id", user.id)
+          .gte("spent_at", `${month}-01`)
+          .order("spent_at", { ascending: true }),
+        supabase
+          .from("budgets")
+          .select("category, amount")
+          .eq("user_id", user.id)
+          .eq("month", month),
+        supabase
+          .from("profiles")
+          .select("display_name")
+          .eq("id", user.id)
+          .single(),
+      ]);
+      setExpenses(
+        (e ?? []).map((x) => ({ ...x, amount: Number(x.amount) || 0 }))
+      );
+      setBudgets(
+        (b ?? []).map((x) => ({ category: x.category, amount: Number(x.amount) || 0 }))
+      );
+      setNama(
+        (p as { display_name?: string } | null)?.display_name ||
+          user.email?.split("@")[0] ||
+          "Sobat Kos"
+      );
+      setStatus("ready");
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  const list = (expenses ?? []).map((e) => ({
-    ...e,
-    amount: Number(e.amount) || 0,
-  }));
+  if (status === "loading") return <Skeleton />;
+  if (status === "setup") return <SetupNotice />;
+  if (status === "splash") return <SplashScreen />;
+
+  const list = expenses;
   const totalSpent = list.reduce((s, e) => s + e.amount, 0);
   const totalBudget = Number(
-    (budgets ?? []).find((b) => b.category === "TOTAL")?.amount ?? 0
+    budgets.find((b) => b.category === "TOTAL")?.amount ?? 0
   );
   const sisa = totalBudget - totalSpent;
-  const nama = profile?.display_name || user.email?.split("@")[0] || "Sobat Kos";
 
   // Donat per kategori
   const perCat = new Map<string, number>();
@@ -71,7 +129,7 @@ export default async function Home() {
   }
 
   // Budget per kategori + progress
-  const budgetRows = (budgets ?? [])
+  const budgetRows = budgets
     .filter((b) => b.category !== "TOTAL")
     .map((b) => {
       const spent = perCat.get(b.category) ?? 0;
@@ -83,10 +141,7 @@ export default async function Home() {
   const overBudget = totalBudget > 0 && sisa < 0;
 
   // Jatah harian: sisa budget dibagi sisa hari bulan ini (termasuk hari ini)
-  const sisaHari = Math.max(
-    daysInMonth - new Date().getDate() + 1,
-    1
-  );
+  const sisaHari = Math.max(daysInMonth - new Date().getDate() + 1, 1);
   const jatahHarian = sisa > 0 ? Math.floor(sisa / sisaHari) : 0;
 
   return (
@@ -218,10 +273,10 @@ export default async function Home() {
           {/* Grafik harian */}
           <section className="rounded-3xl border border-brand-100 bg-white p-4 shadow-lg shadow-brand-600/5">
             <h2 className="mb-2 text-sm font-extrabold text-slate-800">
-              📈 Pengeluaran Harian
+              📊 Pengeluaran Harian
             </h2>
             <DailyChart
-              labels={daily.map((_, i) => String(i + 1))}
+              labels={daily.map((_, i) => `${i + 1}`)}
               values={daily}
             />
           </section>

@@ -1,5 +1,8 @@
-import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 import { currentMonth, formatRupiah, formatTanggal, namaBulan } from "@/lib/format";
 import { categoryMeta } from "@/lib/categories";
 import DonutChart from "@/components/DonutChart";
@@ -7,51 +10,100 @@ import InsightCard from "@/components/InsightCard";
 import PrintButton from "./PrintButton";
 import SetupNotice from "@/components/SetupNotice";
 
-export const dynamic = "force-dynamic";
+interface Expense {
+  id: string;
+  amount: number;
+  category: string;
+  note: string | null;
+  spent_at: string;
+}
 
-export default async function RangkumanPage() {
-  if (
-    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
-    !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  ) {
-    return <SetupNotice />;
-  }
+interface Budget {
+  category: string;
+  amount: number;
+}
 
-  const supabase = await createClient();
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-  const user = session?.user ?? null;
-  if (!user) redirect("/login");
-
+export default function RangkumanPage() {
+  const router = useRouter();
+  const [status, setStatus] = useState<"loading" | "setup" | "ready">("loading");
+  const [list, setList] = useState<Expense[]>([]);
+  const [budgets, setBudgets] = useState<Budget[]>([]);
+  const [nama, setNama] = useState("Sobat Kos");
   const month = currentMonth();
 
-  const [{ data: expenses }, { data: budgets }, { data: profile }] =
-    await Promise.all([
-      supabase
-        .from("expenses")
-        .select("id, amount, category, note, spent_at")
-        .eq("user_id", user.id)
-        .gte("spent_at", `${month}-01`)
-        .order("amount", { ascending: false }),
-      supabase
-        .from("budgets")
-        .select("category, amount")
-        .eq("user_id", user.id)
-        .eq("month", month),
-      supabase.from("profiles").select("display_name").eq("id", user.id).single(),
-    ]);
+  useEffect(() => {
+    (async () => {
+      if (
+        !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+        !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+      ) {
+        setStatus("setup");
+        return;
+      }
+      const supabase = createClient();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      const user = session?.user ?? null;
+      if (!user) {
+        router.replace("/login");
+        return;
+      }
+      const [{ data: e }, { data: b }, { data: p }] = await Promise.all([
+        supabase
+          .from("expenses")
+          .select("id, amount, category, note, spent_at")
+          .eq("user_id", user.id)
+          .gte("spent_at", `${month}-01`)
+          .order("amount", { ascending: false }),
+        supabase
+          .from("budgets")
+          .select("category, amount")
+          .eq("user_id", user.id)
+          .eq("month", month),
+        supabase
+          .from("profiles")
+          .select("display_name")
+          .eq("id", user.id)
+          .single(),
+      ]);
+      setList(
+        (e ?? []).map((x) => ({ ...x, amount: Number(x.amount) || 0 }))
+      );
+      setBudgets(
+        (b ?? []).map((x) => ({
+          category: x.category,
+          amount: Number(x.amount) || 0,
+        }))
+      );
+      setNama(
+        (p as { display_name?: string } | null)?.display_name ||
+          user.email?.split("@")[0] ||
+          "Sobat Kos"
+      );
+      setStatus("ready");
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  const list = (expenses ?? []).map((e) => ({
-    ...e,
-    amount: Number(e.amount) || 0,
-  }));
+  if (status === "loading") {
+    return (
+      <div className="space-y-4" aria-label="Memuat rangkuman">
+        <div className="h-8 w-48 animate-pulse rounded-2xl bg-white" />
+        <div className="h-64 animate-pulse rounded-3xl bg-white" />
+        <p className="py-2 text-center text-xs font-bold text-slate-400">
+          ⏳ Memuat rangkuman...
+        </p>
+      </div>
+    );
+  }
+  if (status === "setup") return <SetupNotice />;
+
   const total = list.reduce((s, e) => s + e.amount, 0);
   const totalBudget = Number(
-    (budgets ?? []).find((b) => b.category === "TOTAL")?.amount ?? 0
+    budgets.find((b) => b.category === "TOTAL")?.amount ?? 0
   );
   const sisa = totalBudget - total;
-  const nama = profile?.display_name || user.email?.split("@")[0] || "Sobat Kos";
 
   const perCat = new Map<string, number>();
   for (const e of list) perCat.set(e.category, (perCat.get(e.category) ?? 0) + e.amount);
