@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { CATEGORIES } from "@/lib/categories";
 import { currentMonth, formatRupiah } from "@/lib/format";
+import { RupiahInput } from "@/components/RupiahInput";
 
 export function DisplayNameForm({ initial }: { initial: string }) {
   const [nama, setNama] = useState(initial);
@@ -123,12 +124,10 @@ export function BudgetForm({ initial }: { initial: BudgetVal[] }) {
         <label className="mb-1 block text-xs font-bold text-slate-600">
           💰 Budget total bulan ini (Rp)
         </label>
-        <input
-          type="number"
-          inputMode="numeric"
+        <RupiahInput
           value={total}
-          onChange={(e) => setTotal(e.target.value)}
-          placeholder="cth: 1500000"
+          onChange={setTotal}
+          placeholder="cth: 1.500.000"
           className="w-full rounded-2xl border-2 border-slate-200 px-4 py-3 text-lg font-extrabold outline-none focus:border-fuchsia-400"
         />
       </div>
@@ -143,13 +142,9 @@ export function BudgetForm({ initial }: { initial: BudgetVal[] }) {
               <span className="w-28 shrink-0 text-xs font-bold text-slate-600">
                 {c.emoji} {c.name}
               </span>
-              <input
-                type="number"
-                inputMode="numeric"
+              <RupiahInput
                 value={perCat[c.name]}
-                onChange={(e) =>
-                  setPerCat({ ...perCat, [c.name]: e.target.value })
-                }
+                onChange={(v) => setPerCat({ ...perCat, [c.name]: v })}
                 placeholder="0"
                 className="flex-1 rounded-xl border-2 border-slate-200 px-3 py-2 text-sm font-bold outline-none focus:border-fuchsia-400"
               />

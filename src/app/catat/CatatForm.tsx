@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { CATEGORIES } from "@/lib/categories";
-import { formatRupiah } from "@/lib/format";
+import { RupiahInput } from "@/components/RupiahInput";
 
 function tanggalHariIni(): string {
   const d = new Date();
@@ -59,8 +59,6 @@ export default function CatatForm() {
     router.refresh();
   }
 
-  const preview = Number(nominal.replace(/\D/g, "")) || 0;
-
   return (
     <div className="space-y-4">
       <h2 className="text-xl font-extrabold text-slate-800">⚡ Catat Kilat</h2>
@@ -73,20 +71,13 @@ export default function CatatForm() {
           <label className="mb-1 block text-xs font-bold text-slate-600">
             Nominal (Rp)
           </label>
-          <input
-            type="number"
-            inputMode="numeric"
+          <RupiahInput
             autoFocus
             value={nominal}
-            onChange={(e) => setNominal(e.target.value)}
-            placeholder="cth: 25000"
+            onChange={setNominal}
+            placeholder="cth: 25.000"
             className="w-full rounded-2xl border-2 border-slate-200 px-4 py-4 text-2xl font-extrabold text-slate-800 outline-none focus:border-fuchsia-400"
           />
-          {preview > 0 && (
-            <p className="mt-1 text-xs font-bold text-fuchsia-600">
-              = {formatRupiah(preview)}
-            </p>
-          )}
         </div>
 
         <div>
