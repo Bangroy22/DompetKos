@@ -39,8 +39,9 @@ export default function CatatForm() {
     (async () => {
       const supabase = createClient();
       const {
-        data: { user },
-      } = await supabase.auth.getUser();
+        data: { session },
+      } = await supabase.auth.getSession();
+      const user = session?.user ?? null;
       if (!user) return;
       const { data } = await supabase
         .from("expenses")
@@ -92,8 +93,9 @@ export default function CatatForm() {
 
     const supabase = createClient();
     const {
-      data: { user },
-    } = await supabase.auth.getUser();
+      data: { session },
+    } = await supabase.auth.getSession();
+    const user = session?.user ?? null;
     if (!user) {
       router.push("/login");
       return;

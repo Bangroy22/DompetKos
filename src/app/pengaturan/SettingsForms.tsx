@@ -19,8 +19,9 @@ export function DisplayNameForm({ initial }: { initial: string }) {
     setOk(false);
     const supabase = createClient();
     const {
-      data: { user },
-    } = await supabase.auth.getUser();
+      data: { session },
+    } = await supabase.auth.getSession();
+    const user = session?.user ?? null;
     if (!user) return;
     const { error } = await supabase
       .from("profiles")
@@ -92,8 +93,9 @@ export function BudgetForm({ initial }: { initial: BudgetVal[] }) {
 
     const supabase = createClient();
     const {
-      data: { user },
-    } = await supabase.auth.getUser();
+      data: { session },
+    } = await supabase.auth.getSession();
+    const user = session?.user ?? null;
     if (!user) return;
 
     const month = currentMonth();
