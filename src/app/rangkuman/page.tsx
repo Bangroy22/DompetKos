@@ -2,8 +2,8 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { currentMonth, formatRupiah, formatTanggal, namaBulan } from "@/lib/format";
 import { categoryMeta } from "@/lib/categories";
-import { localInsight } from "@/lib/insight";
 import DonutChart from "@/components/DonutChart";
+import InsightCard from "@/components/InsightCard";
 import PrintButton from "./PrintButton";
 import SetupNotice from "@/components/SetupNotice";
 
@@ -59,18 +59,6 @@ export default async function RangkumanPage() {
   const top5 = [...list]
     .sort((a, b) => b.amount - a.amount)
     .slice(0, 5);
-
-  const insight = localInsight(
-    list.map((e) => ({
-      id: e.id,
-      amount: e.amount,
-      category: e.category,
-      note: e.note,
-      spent_at: e.spent_at,
-    })),
-    (budgets ?? []).map((b) => ({ category: b.category, amount: b.amount })),
-    month
-  );
 
   return (
     <div className="space-y-4">
@@ -204,14 +192,9 @@ export default async function RangkumanPage() {
               </ol>
             </div>
 
-            {/* Insight */}
-            <div className="rounded-2xl bg-gradient-to-br from-brand-50 to-amber-50 p-4">
-              <h3 className="mb-1 text-sm font-extrabold text-slate-800">
-                🤖 Insight
-              </h3>
-              <p className="whitespace-pre-line text-sm leading-relaxed text-slate-700">
-                {insight}
-              </p>
+            {/* Insight interaktif */}
+            <div className="no-print">
+              <InsightCard />
             </div>
           </>
         )}
