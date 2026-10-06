@@ -7,6 +7,15 @@ export const metadata: Metadata = {
   title: "DompetKos — Catat Pengeluaran Anak Kos",
   description:
     "Aplikasi pencatat pengeluaran buat anak kos & mahasiswa, lengkap dengan budget dan insight AI.",
+  themeColor: "#047857",
+  appleWebApp: {
+    capable: true,
+    title: "DompetKos",
+    statusBarStyle: "default",
+  },
+  icons: {
+    apple: "/apple-touch-icon.png",
+  },
 };
 
 export default function RootLayout({
