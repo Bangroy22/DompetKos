@@ -5,7 +5,9 @@ export async function proxy(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
 
   const path = request.nextUrl.pathname;
-  const isAuthRoute = path === "/login" || path.startsWith("/auth/");
+  // Halaman splash (/) boleh dibuka tanpa login; halaman app lainnya diproteksi
+  const isAuthRoute =
+    path === "/" || path === "/login" || path.startsWith("/auth/");
 
   // Tanpa konfigurasi Supabase, lewatkan tanpa proteksi route
   // (halaman login akan menampilkan pesan konfigurasi)

@@ -1,4 +1,3 @@
-import { redirect } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { currentMonth, formatRupiah, namaBulan } from "@/lib/format";
@@ -7,6 +6,7 @@ import DonutChart from "@/components/DonutChart";
 import DailyChart from "@/components/DailyChart";
 import InsightCard from "@/components/InsightCard";
 import SetupNotice from "@/components/SetupNotice";
+import SplashScreen from "@/components/SplashScreen";
 
 export const dynamic = "force-dynamic";
 
@@ -22,7 +22,7 @@ export default async function Home() {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
+  if (!user) return <SplashScreen />;
 
   const month = currentMonth();
 
