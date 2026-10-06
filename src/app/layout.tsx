@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import BottomNav from "@/components/BottomNav";
+import { LogoMark } from "@/components/Logo";
 
 export const metadata: Metadata = {
   title: "DompetKos — Catat Pengeluaran Anak Kos",
@@ -17,10 +18,14 @@ export default function RootLayout({
     <html lang="id">
       <body className="min-h-dvh antialiased">
         {/* Header — nama DompetKos selalu tampil */}
-        <header className="no-print sticky top-0 z-40 bg-gradient-to-r from-violet-600 via-fuchsia-500 to-orange-400 shadow-lg shadow-fuchsia-200">
-          <div className="mx-auto flex max-w-md items-center gap-2 px-4 py-3">
-            <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-white text-xl shadow">
-              💰
+        <header className="no-print sticky top-0 z-40 bg-gradient-to-r from-brand-700 via-brand-600 to-brand-500 shadow-lg shadow-brand-600/20">
+          <div className="pointer-events-none absolute inset-0 overflow-hidden">
+            <div className="absolute -right-8 -top-10 h-32 w-32 rounded-full bg-white/10" />
+            <div className="absolute -left-6 bottom-0 h-20 w-20 translate-y-1/2 rounded-full bg-white/10" />
+          </div>
+          <div className="relative mx-auto flex max-w-md items-center gap-2.5 px-4 py-3">
+            <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white shadow-md">
+              <LogoMark className="h-7 w-7" />
             </span>
             <div className="leading-tight">
               <h1 className="text-lg font-extrabold tracking-tight text-white">

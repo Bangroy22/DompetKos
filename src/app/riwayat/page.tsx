@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { CATEGORIES, categoryMeta } from "@/lib/categories";
 import { formatRupiah, formatTanggal } from "@/lib/format";
+import { RupiahInput } from "@/components/RupiahInput";
 
 interface Expense {
   id: string;
@@ -92,13 +93,13 @@ export default function RiwayatPage() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-extrabold text-slate-800">🧾 Riwayat</h2>
-        <span className="rounded-full bg-violet-100 px-3 py-1 text-xs font-extrabold text-violet-700">
+        <span className="rounded-full bg-brand-100 px-3 py-1 text-xs font-extrabold text-brand-700">
           {formatRupiah(total)}
         </span>
       </div>
 
       {/* Filter */}
-      <section className="space-y-2 rounded-3xl border-2 border-violet-100 bg-white p-4 shadow-sm">
+      <section className="space-y-2 rounded-3xl border border-brand-100 bg-white p-4 shadow-lg shadow-brand-600/5">
         <div className="flex flex-wrap gap-1.5">
           {["Semua", ...CATEGORIES.map((c) => c.name)].map((k) => (
             <button
@@ -106,7 +107,7 @@ export default function RiwayatPage() {
               onClick={() => setFilterKat(k)}
               className={`rounded-full px-3 py-1.5 text-xs font-extrabold transition ${
                 filterKat === k
-                  ? "bg-gradient-to-r from-violet-600 to-fuchsia-500 text-white shadow"
+                  ? "bg-gradient-to-r from-brand-700 to-brand-500 text-white shadow"
                   : "bg-slate-100 text-slate-600"
               }`}
             >
@@ -136,7 +137,7 @@ export default function RiwayatPage() {
           ⏳ Memuat riwayat...
         </p>
       ) : filtered.length === 0 ? (
-        <div className="rounded-3xl border-2 border-dashed border-violet-200 bg-white/70 p-8 text-center">
+        <div className="rounded-3xl border-2 border-dashed border-brand-200 bg-white/70 p-8 text-center">
           <p className="text-4xl">🗒️</p>
           <p className="mt-2 text-sm font-extrabold text-slate-700">
             {list.length === 0
@@ -205,14 +206,11 @@ export default function RiwayatPage() {
             <h3 className="text-base font-extrabold text-slate-800">
               ✏️ Edit Pengeluaran
             </h3>
-            <input
-              type="number"
-              inputMode="numeric"
-              value={editing.amount || ""}
-              onChange={(e) =>
-                setEditing({ ...editing, amount: Number(e.target.value) })
-              }
-              className="w-full rounded-2xl border-2 border-slate-200 px-4 py-3 text-lg font-extrabold outline-none focus:border-fuchsia-400"
+            <RupiahInput
+              value={editing.amount ? String(editing.amount) : ""}
+              onChange={(v) => setEditing({ ...editing, amount: Number(v) || 0 })}
+              placeholder="cth: 25.000"
+              className="w-full rounded-2xl border-2 border-slate-200 px-4 py-3 text-lg font-extrabold outline-none focus:border-brand-400"
             />
             <div className="grid grid-cols-3 gap-1.5">
               {CATEGORIES.map((c) => (
@@ -222,7 +220,7 @@ export default function RiwayatPage() {
                   onClick={() => setEditing({ ...editing, category: c.name })}
                   className={`rounded-xl border-2 p-2 text-center ${
                     editing.category === c.name
-                      ? "border-fuchsia-500 bg-fuchsia-50"
+                      ? "border-brand-500 bg-brand-50"
                       : "border-slate-100 bg-slate-50"
                   }`}
                 >
@@ -238,7 +236,7 @@ export default function RiwayatPage() {
               onChange={(e) => setEditing({ ...editing, note: e.target.value })}
               placeholder="Catatan"
               maxLength={120}
-              className="w-full rounded-2xl border-2 border-slate-200 px-4 py-3 text-sm font-semibold outline-none focus:border-fuchsia-400"
+              className="w-full rounded-2xl border-2 border-slate-200 px-4 py-3 text-sm font-semibold outline-none focus:border-brand-400"
             />
             <input
               type="date"
@@ -246,7 +244,7 @@ export default function RiwayatPage() {
               onChange={(e) =>
                 setEditing({ ...editing, spent_at: e.target.value })
               }
-              className="w-full rounded-2xl border-2 border-slate-200 px-4 py-3 text-sm font-semibold outline-none focus:border-fuchsia-400"
+              className="w-full rounded-2xl border-2 border-slate-200 px-4 py-3 text-sm font-semibold outline-none focus:border-brand-400"
             />
             <div className="grid grid-cols-2 gap-2">
               <button
@@ -259,7 +257,7 @@ export default function RiwayatPage() {
               <button
                 type="submit"
                 disabled={saving}
-                className="rounded-2xl bg-gradient-to-r from-violet-600 to-fuchsia-500 py-3 text-sm font-extrabold text-white disabled:opacity-60"
+                className="rounded-2xl bg-gradient-to-r from-brand-700 to-brand-500 py-3 text-sm font-extrabold text-white disabled:opacity-60"
               >
                 {saving ? "⏳..." : "💾 Simpan"}
               </button>

@@ -41,14 +41,14 @@ export default async function PengaturanPage() {
       <h2 className="text-xl font-extrabold text-slate-800">⚙️ Pengaturan</h2>
 
       {/* Profil */}
-      <section className="space-y-3 rounded-3xl border-2 border-violet-100 bg-white p-4 shadow-sm">
+      <section className="space-y-3 rounded-3xl border border-brand-100 bg-white p-4 shadow-lg shadow-brand-600/5">
         <h3 className="text-sm font-extrabold text-slate-800">👤 Profil</h3>
         <DisplayNameForm initial={profile?.display_name ?? ""} />
         <p className="text-xs font-semibold text-slate-400">📧 {user.email}</p>
       </section>
 
       {/* Budget */}
-      <section className="rounded-3xl border-2 border-violet-100 bg-white p-4 shadow-sm">
+      <section className="rounded-3xl border border-brand-100 bg-white p-4 shadow-lg shadow-brand-600/5">
         <h3 className="mb-3 text-sm font-extrabold text-slate-800">
           💰 Budget — {namaBulan(month)}
         </h3>
@@ -61,7 +61,7 @@ export default async function PengaturanPage() {
       </section>
 
       {/* Status AI */}
-      <section className="rounded-3xl border-2 border-violet-100 bg-white p-4 shadow-sm">
+      <section className="rounded-3xl border border-brand-100 bg-white p-4 shadow-lg shadow-brand-600/5">
         <h3 className="mb-2 text-sm font-extrabold text-slate-800">
           🤖 Koneksi Gemini AI
         </h3>
@@ -91,7 +91,7 @@ export default async function PengaturanPage() {
       <LogoutButton />
 
       <p className="pb-4 text-center text-xs text-slate-400">
-        DompetKos 💜 — dibuat untuk anak kos Indonesia
+        DompetKos 💚 — dibuat untuk anak kos Indonesia
       </p>
     </div>
   );

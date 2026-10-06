@@ -42,12 +42,12 @@ export function DisplayNameForm({ initial }: { initial: string }) {
           onChange={(e) => setNama(e.target.value)}
           placeholder="cth: Roy"
           maxLength={40}
-          className="flex-1 rounded-2xl border-2 border-slate-200 px-4 py-2.5 text-sm font-semibold outline-none focus:border-fuchsia-400"
+          className="flex-1 rounded-2xl border-2 border-slate-200 px-4 py-2.5 text-sm font-semibold outline-none focus:border-brand-400"
         />
         <button
           type="submit"
           disabled={saving}
-          className="rounded-2xl bg-gradient-to-r from-violet-600 to-fuchsia-500 px-4 py-2.5 text-sm font-extrabold text-white disabled:opacity-60"
+          className="rounded-2xl bg-gradient-to-r from-brand-700 to-brand-500 px-4 py-2.5 text-sm font-extrabold text-white disabled:opacity-60"
         >
           {saving ? "⏳" : "💾"}
         </button>
@@ -128,7 +128,7 @@ export function BudgetForm({ initial }: { initial: BudgetVal[] }) {
           value={total}
           onChange={setTotal}
           placeholder="cth: 1.500.000"
-          className="w-full rounded-2xl border-2 border-slate-200 px-4 py-3 text-lg font-extrabold outline-none focus:border-fuchsia-400"
+          className="w-full rounded-2xl border-2 border-slate-200 px-4 py-3 text-lg font-extrabold outline-none focus:border-brand-400"
         />
       </div>
       <div>
@@ -146,7 +146,7 @@ export function BudgetForm({ initial }: { initial: BudgetVal[] }) {
                 value={perCat[c.name]}
                 onChange={(v) => setPerCat({ ...perCat, [c.name]: v })}
                 placeholder="0"
-                className="flex-1 rounded-xl border-2 border-slate-200 px-3 py-2 text-sm font-bold outline-none focus:border-fuchsia-400"
+                className="flex-1 rounded-xl border-2 border-slate-200 px-3 py-2 text-sm font-bold outline-none focus:border-brand-400"
               />
             </div>
           ))}
@@ -164,7 +164,7 @@ export function BudgetForm({ initial }: { initial: BudgetVal[] }) {
       <button
         type="submit"
         disabled={saving}
-        className="w-full rounded-2xl bg-gradient-to-r from-violet-600 to-fuchsia-500 py-3 text-sm font-extrabold text-white shadow-md shadow-fuchsia-200 disabled:opacity-60"
+        className="w-full rounded-2xl bg-gradient-to-r from-brand-700 to-brand-500 py-3 text-sm font-extrabold text-white shadow-lg shadow-brand-600/25 disabled:opacity-60"
       >
         {saving ? "⏳ Menyimpan..." : "💾 Simpan Budget"}
       </button>

@@ -5,12 +5,12 @@ export interface Category {
 }
 
 export const CATEGORIES: Category[] = [
-  { name: "Makan", emoji: "🍜", color: "#f97316" },
-  { name: "Kopi/Jajan", emoji: "🧋", color: "#eab308" },
-  { name: "Transport", emoji: "🛵", color: "#3b82f6" },
-  { name: "Kos", emoji: "🏠", color: "#8b5cf6" },
-  { name: "Hiburan", emoji: "🎮", color: "#ec4899" },
-  { name: "Lainnya", emoji: "✨", color: "#14b8a6" },
+  { name: "Makan", emoji: "🍜", color: "#F59E0B" },
+  { name: "Kopi/Jajan", emoji: "🧋", color: "#FB923C" },
+  { name: "Transport", emoji: "🛵", color: "#14B8A6" },
+  { name: "Kos", emoji: "🏠", color: "#0F766E" },
+  { name: "Hiburan", emoji: "🎮", color: "#FB7185" },
+  { name: "Lainnya", emoji: "✨", color: "#5EEAD4" },
 ];
 
 export function categoryMeta(name: string): Category {

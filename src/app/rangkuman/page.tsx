@@ -80,8 +80,8 @@ export default async function RangkumanPage() {
       </div>
 
       {/* ===== Area cetak ===== */}
-      <div className="print-area space-y-4 rounded-3xl border-2 border-violet-100 bg-white p-5 shadow-sm">
-        <div className="border-b-2 border-dashed border-violet-100 pb-3 text-center">
+      <div className="print-area space-y-4 rounded-3xl border border-brand-100 bg-white p-5 shadow-lg shadow-brand-600/5">
+        <div className="border-b-2 border-dashed border-brand-200 pb-3 text-center">
           <p className="text-lg font-extrabold text-slate-800">
             💰 DompetKos
           </p>
@@ -92,19 +92,19 @@ export default async function RangkumanPage() {
 
         {/* Total vs budget */}
         <div className="grid grid-cols-3 gap-2 text-center">
-          <div className="rounded-2xl bg-violet-50 p-3">
+          <div className="rounded-2xl bg-brand-50 p-3">
             <p className="text-[10px] font-bold uppercase text-slate-500">
               Pengeluaran
             </p>
-            <p className="text-sm font-extrabold text-violet-700">
+            <p className="text-sm font-extrabold text-brand-700">
               {formatRupiah(total)}
             </p>
           </div>
-          <div className="rounded-2xl bg-fuchsia-50 p-3">
+          <div className="rounded-2xl bg-amber-50 p-3">
             <p className="text-[10px] font-bold uppercase text-slate-500">
               Budget
             </p>
-            <p className="text-sm font-extrabold text-fuchsia-700">
+            <p className="text-sm font-extrabold text-amber-700">
               {totalBudget > 0 ? formatRupiah(totalBudget) : "—"}
             </p>
           </div>
@@ -204,7 +204,7 @@ export default async function RangkumanPage() {
             </div>
 
             {/* Insight */}
-            <div className="rounded-2xl bg-gradient-to-br from-violet-50 to-fuchsia-50 p-4">
+            <div className="rounded-2xl bg-gradient-to-br from-brand-50 to-amber-50 p-4">
               <h3 className="mb-1 text-sm font-extrabold text-slate-800">
                 🤖 Insight
               </h3>
@@ -216,7 +216,7 @@ export default async function RangkumanPage() {
         )}
 
         <p className="pt-2 text-center text-[10px] text-slate-400">
-          Dibuat dengan 💜 oleh DompetKos •{" "}
+          Dibuat dengan 💚 oleh DompetKos •{" "}
           {new Date().toLocaleDateString("id-ID", {
             day: "numeric",
             month: "long",

@@ -25,7 +25,8 @@ export default function DailyChart({ labels, values }: Props) {
           {
             data: values,
             backgroundColor: (ctx: { dataIndex: number }) =>
-              ctx.dataIndex % 2 === 0 ? "#a855f7" : "#fb7185",
+              ctx.dataIndex % 2 === 0 ? "#14B8A6" : "#0F766E",
+            hoverBackgroundColor: "#F59E0B",
             borderRadius: 6,
           },
         ],

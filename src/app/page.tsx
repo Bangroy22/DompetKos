@@ -80,29 +80,57 @@ export default async function Home() {
     });
 
   const sapaan = sapaanWaktu();
+  const overBudget = totalBudget > 0 && sisa < 0;
 
   return (
     <div className="space-y-4">
       {/* Sapaan */}
-      <div>
-        <p className="text-sm font-semibold text-slate-500">
-          {sapaan}, {nama}! 👋
-        </p>
-        <h2 className="text-xl font-extrabold text-slate-800">
-          {namaBulan(month)}
-        </h2>
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="text-sm font-semibold text-slate-500">
+            {sapaan}, {nama}! 👋
+          </p>
+          <h2 className="text-xl font-extrabold tracking-tight text-slate-800">
+            {namaBulan(month)}
+          </h2>
+        </div>
+        <Link
+          href="/catat"
+          className="rounded-2xl bg-gradient-to-r from-brand-700 to-brand-500 px-4 py-2.5 text-sm font-extrabold text-white shadow-lg shadow-brand-600/25 transition active:scale-95"
+        >
+          ➕ Catat
+        </Link>
       </div>
 
       {/* Kartu sisa uang */}
-      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-violet-600 via-fuchsia-500 to-orange-400 p-5 text-white shadow-lg shadow-fuchsia-200">
-        <div className="absolute -right-6 -top-6 h-32 w-32 rounded-full bg-white/15" />
-        <div className="absolute -bottom-8 -left-4 h-24 w-24 rounded-full bg-white/10" />
+      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-800 via-brand-600 to-brand-500 p-5 text-white shadow-xl shadow-brand-600/25">
+        <div className="pointer-events-none absolute inset-0">
+          <div className="absolute -right-8 -top-10 h-40 w-40 rounded-full bg-white/10" />
+          <div className="absolute -bottom-10 -left-6 h-28 w-28 rounded-full bg-white/10" />
+          <div className="absolute right-16 top-8 h-10 w-10 rounded-full bg-glow-400/30" />
+        </div>
         <p className="relative text-xs font-bold uppercase tracking-wider text-white/80">
           💸 Sisa uang bulan ini
         </p>
-        <p className="relative mt-1 text-4xl font-extrabold tracking-tight">
+        <p
+          className={`relative mt-1 text-4xl font-extrabold tracking-tight ${
+            overBudget ? "text-glow-400" : ""
+          }`}
+        >
           {totalBudget > 0 ? formatRupiah(sisa) : "—"}
         </p>
+        <div className="relative mt-3 h-2 overflow-hidden rounded-full bg-white/20">
+          <div
+            className={`h-full rounded-full transition-all ${
+              overBudget
+                ? "bg-glow-400"
+                : "bg-gradient-to-r from-glow-400 to-amber-300"
+            }`}
+            style={{
+              width: totalBudget > 0 ? `${Math.min((totalSpent / totalBudget) * 100, 100)}%` : "0%",
+            }}
+          />
+        </div>
         <p className="relative mt-2 text-xs font-semibold text-white/85">
           {totalBudget > 0 ? (
             <>
@@ -112,7 +140,7 @@ export default async function Home() {
           ) : (
             <>
               Kamu sudah mengeluarkan {formatRupiah(totalSpent)} bulan ini.{" "}
-              <Link href="/pengaturan" className="underline">
+              <Link href="/pengaturan" className="font-extrabold underline">
                 Atur budget yuk →
               </Link>
             </>
@@ -121,7 +149,7 @@ export default async function Home() {
       </section>
 
       {list.length === 0 ? (
-        <section className="rounded-3xl border-2 border-dashed border-violet-200 bg-white/70 p-6 text-center">
+        <section className="rounded-3xl border-2 border-dashed border-brand-200 bg-white/70 p-6 text-center">
           <p className="text-4xl">📝</p>
           <p className="mt-2 text-sm font-extrabold text-slate-700">
             Belum ada pengeluaran bulan ini
@@ -131,7 +159,7 @@ export default async function Home() {
           </p>
           <Link
             href="/catat"
-            className="mt-3 inline-block rounded-2xl bg-gradient-to-r from-violet-600 to-fuchsia-500 px-6 py-2.5 text-sm font-extrabold text-white shadow-md shadow-fuchsia-200"
+            className="mt-3 inline-block rounded-2xl bg-gradient-to-r from-brand-700 to-brand-500 px-6 py-2.5 text-sm font-extrabold text-white shadow-lg shadow-brand-600/25"
           >
             ➕ Catat Sekarang
           </Link>
@@ -139,7 +167,7 @@ export default async function Home() {
       ) : (
         <>
           {/* Donat kategori */}
-          <section className="rounded-3xl border-2 border-violet-100 bg-white p-4 shadow-sm">
+          <section className="rounded-3xl border border-brand-100 bg-white p-4 shadow-lg shadow-brand-600/5">
             <h2 className="mb-2 text-sm font-extrabold text-slate-800">
               🍩 Pengeluaran per Kategori
             </h2>
@@ -153,7 +181,7 @@ export default async function Home() {
           </section>
 
           {/* Grafik harian */}
-          <section className="rounded-3xl border-2 border-violet-100 bg-white p-4 shadow-sm">
+          <section className="rounded-3xl border border-brand-100 bg-white p-4 shadow-lg shadow-brand-600/5">
             <h2 className="mb-2 text-sm font-extrabold text-slate-800">
               📈 Pengeluaran Harian
             </h2>
@@ -167,7 +195,7 @@ export default async function Home() {
 
       {/* Budget per kategori */}
       {budgetRows.length > 0 && (
-        <section className="rounded-3xl border-2 border-violet-100 bg-white p-4 shadow-sm">
+        <section className="rounded-3xl border border-brand-100 bg-white p-4 shadow-lg shadow-brand-600/5">
           <h2 className="mb-3 text-sm font-extrabold text-slate-800">
             🎯 Budget per Kategori
           </h2>
@@ -181,22 +209,22 @@ export default async function Home() {
                     <span className="text-slate-700">
                       {meta.emoji} {b.category}
                     </span>
-                    <span className={bahaya ? "text-rose-600" : "text-slate-500"}>
+                    <span className={bahaya ? "text-amber-600" : "text-slate-500"}>
                       {formatRupiah(b.spent)} / {formatRupiah(b.amount)}
                     </span>
                   </div>
-                  <div className="h-3 overflow-hidden rounded-full bg-slate-100">
+                  <div className="h-3 overflow-hidden rounded-full bg-brand-50">
                     <div
                       className={`h-full rounded-full transition-all ${
                         bahaya
-                          ? "bg-gradient-to-r from-rose-500 to-red-500"
-                          : "bg-gradient-to-r from-emerald-400 to-teal-400"
+                          ? "bg-gradient-to-r from-amber-500 to-coral-400"
+                          : "bg-gradient-to-r from-brand-600 to-brand-400"
                       }`}
                       style={{ width: `${Math.min(b.pct, 100)}%` }}
                     />
                   </div>
                   {bahaya && (
-                    <p className="mt-0.5 text-[11px] font-bold text-rose-600">
+                    <p className="mt-0.5 text-[11px] font-bold text-amber-600">
                       ⚠️ Udah {Math.round(b.pct)}% — rem dikit!
                     </p>
                   )}
@@ -211,19 +239,29 @@ export default async function Home() {
       <InsightCard />
 
       {/* Kategori cepat */}
-      <section className="grid grid-cols-3 gap-2">
-        {CATEGORIES.map((c) => (
-          <Link
-            key={c.name}
-            href={`/catat?kategori=${encodeURIComponent(c.name)}`}
-            className="rounded-2xl border-2 border-white bg-white p-3 text-center shadow-sm transition active:scale-95"
-          >
-            <span className="text-2xl">{c.emoji}</span>
-            <p className="mt-1 text-[11px] font-extrabold text-slate-700">
-              {c.name}
-            </p>
-          </Link>
-        ))}
+      <section>
+        <h2 className="mb-2 text-sm font-extrabold text-slate-800">
+          ⚡ Catat Kilat
+        </h2>
+        <div className="grid grid-cols-3 gap-2">
+          {CATEGORIES.map((c) => (
+            <Link
+              key={c.name}
+              href={`/catat?kategori=${encodeURIComponent(c.name)}`}
+              className="rounded-2xl border border-brand-100 bg-white p-3 text-center shadow-sm transition hover:shadow-md active:scale-95"
+            >
+              <span
+                className="mx-auto flex h-11 w-11 items-center justify-center rounded-2xl text-xl"
+                style={{ backgroundColor: c.color + "22" }}
+              >
+                {c.emoji}
+              </span>
+              <p className="mt-1.5 text-[11px] font-extrabold text-slate-700">
+                {c.name}
+              </p>
+            </Link>
+          ))}
+        </div>
       </section>
     </div>
   );

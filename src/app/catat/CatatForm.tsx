@@ -65,7 +65,7 @@ export default function CatatForm() {
 
       <form
         onSubmit={simpan}
-        className="space-y-4 rounded-3xl border-2 border-violet-100 bg-white p-5 shadow-sm"
+        className="space-y-4 rounded-3xl border-2 border border-brand-100 bg-white p-5 shadow-lg shadow-brand-600/5"
       >
         <div>
           <label className="mb-1 block text-xs font-bold text-slate-600">
@@ -76,7 +76,7 @@ export default function CatatForm() {
             value={nominal}
             onChange={setNominal}
             placeholder="cth: 25.000"
-            className="w-full rounded-2xl border-2 border-slate-200 px-4 py-4 text-2xl font-extrabold text-slate-800 outline-none focus:border-fuchsia-400"
+            className="w-full rounded-2xl border-2 border-slate-200 px-4 py-4 text-2xl font-extrabold text-slate-800 outline-none focus:border-brand-400"
           />
         </div>
 
@@ -92,7 +92,7 @@ export default function CatatForm() {
                 onClick={() => setKategori(c.name)}
                 className={`rounded-2xl border-2 p-3 text-center transition active:scale-95 ${
                   kategori === c.name
-                    ? "border-fuchsia-500 bg-fuchsia-50 shadow"
+                    ? "border-brand-500 bg-brand-50 shadow"
                     : "border-slate-100 bg-slate-50"
                 }`}
               >
@@ -115,7 +115,7 @@ export default function CatatForm() {
             onChange={(e) => setCatatan(e.target.value)}
             placeholder="cth: Nasi padang + es teh"
             maxLength={120}
-            className="w-full rounded-2xl border-2 border-slate-200 px-4 py-3 text-sm font-semibold outline-none focus:border-fuchsia-400"
+            className="w-full rounded-2xl border-2 border-slate-200 px-4 py-3 text-sm font-semibold outline-none focus:border-brand-400"
           />
         </div>
 
@@ -127,7 +127,7 @@ export default function CatatForm() {
             type="date"
             value={tanggal}
             onChange={(e) => setTanggal(e.target.value)}
-            className="w-full rounded-2xl border-2 border-slate-200 px-4 py-3 text-sm font-semibold outline-none focus:border-fuchsia-400"
+            className="w-full rounded-2xl border-2 border-slate-200 px-4 py-3 text-sm font-semibold outline-none focus:border-brand-400"
           />
         </div>
 
@@ -140,7 +140,7 @@ export default function CatatForm() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full rounded-2xl bg-gradient-to-r from-violet-600 to-fuchsia-500 py-4 text-base font-extrabold text-white shadow-md shadow-fuchsia-200 transition active:scale-[0.98] disabled:opacity-60"
+          className="w-full rounded-2xl bg-gradient-to-r from-brand-700 to-brand-500 py-4 text-base font-extrabold text-white shadow-md shadow-brand-600/25 transition active:scale-[0.98] disabled:opacity-60"
         >
           {loading ? "⏳ Menyimpan..." : "💾 Simpan Pengeluaran"}
         </button>
