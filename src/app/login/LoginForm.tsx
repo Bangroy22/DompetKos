@@ -15,7 +15,6 @@ export default function LoginForm() {
   const [loading, setLoading] = useState(false);
   const [pesan, setPesan] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [lupaMode, setLupaMode] = useState(false);
 
   const supabaseSiap = Boolean(
     process.env.NEXT_PUBLIC_SUPABASE_URL &&
@@ -89,31 +88,6 @@ export default function LoginForm() {
       if (error) throw error;
     } catch {
       setError("Gagal login dengan Google. Coba lagi ya.");
-      setLoading(false);
-    }
-  }
-
-  async function kirimReset() {
-    setLoading(true);
-    setError(null);
-    setPesan(null);
-    try {
-      const supabase = createClient();
-      const bersih = email.trim();
-      if (!bersih) throw new Error("Isi email kamu dulu ya.");
-      const { error } = await supabase.auth.resetPasswordForEmail(bersih, {
-        redirectTo: `${window.location.origin}/auth/callback?next=/reset-password`,
-      });
-      if (error) throw error;
-      setPesan(
-        "📧 Link reset terkirim! Cek inbox email kamu, lalu klik linknya untuk buat password baru."
-      );
-      setLupaMode(false);
-    } catch (e) {
-      setError(
-        e instanceof Error ? terjemahkan(e.message) : "Gagal mengirim link reset. Coba lagi ya."
-      );
-    } finally {
       setLoading(false);
     }
   }
@@ -204,47 +178,6 @@ export default function LoginForm() {
             />
           </div>
 
-          {mode === "login" && !lupaMode && (
-            <div className="text-right">
-              <button
-                type="button"
-                onClick={() => {
-                  setLupaMode(true);
-                  setError(null);
-                  setPesan(null);
-                }}
-                className="text-xs font-bold text-brand-600 hover:underline"
-              >
-                Lupa password?
-              </button>
-            </div>
-          )}
-          {mode === "login" && lupaMode && (
-            <div className="rounded-2xl bg-brand-50 p-3">
-              <p className="text-xs font-semibold text-slate-600">
-                Isi email kamu di atas, lalu tekan tombol di bawah. Kami kirim
-                link untuk buat password baru.
-              </p>
-              <div className="mt-2 flex gap-2">
-                <button
-                  type="button"
-                  onClick={kirimReset}
-                  disabled={loading || !email.trim()}
-                  className="flex-1 rounded-xl bg-gradient-to-r from-brand-700 to-brand-500 py-2.5 text-xs font-extrabold text-white shadow-md shadow-brand-600/25 transition active:scale-[0.98] disabled:opacity-60"
-                >
-                  {loading ? "⏳ Mengirim..." : "📧 Kirim link reset"}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setLupaMode(false)}
-                  className="rounded-xl border-2 border-slate-200 bg-white px-3 py-2.5 text-xs font-extrabold text-slate-500 transition hover:border-slate-300"
-                >
-                  Batal
-                </button>
-              </div>
-            </div>
-          )}
-
           {error && (
             <p className="rounded-2xl bg-rose-50 px-4 py-2 text-sm font-semibold text-rose-600">
               ⚠️ {error}
@@ -258,11 +191,6 @@ export default function LoginForm() {
           {params.get("error") && (
             <p className="rounded-2xl bg-rose-50 px-4 py-2 text-sm font-semibold text-rose-600">
               ⚠️ Login Google gagal. Coba lagi ya.
-            </p>
-          )}
-          {params.get("reset") === "ok" && (
-            <p className="rounded-2xl bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-700">
-              ✅ Password berhasil diubah! Silakan masuk dengan password barumu.
             </p>
           )}
 
