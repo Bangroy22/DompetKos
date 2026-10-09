@@ -22,7 +22,6 @@ export default function PengaturanPage() {
   const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
   const [budgets, setBudgets] = useState<Budget[]>([]);
-  const [geminiAktif, setGeminiAktif] = useState(false);
   const month = currentMonth();
 
   useEffect(() => {
@@ -43,7 +42,7 @@ export default function PengaturanPage() {
         router.replace("/login");
         return;
       }
-      const [{ data: profile }, { data: b }, statusRes] = await Promise.all([
+      const [{ data: profile }, { data: b }] = await Promise.all([
         supabase
           .from("profiles")
           .select("display_name")
@@ -54,7 +53,6 @@ export default function PengaturanPage() {
           .select("category, amount")
           .eq("user_id", user.id)
           .eq("month", month),
-        fetch("/api/status").then((r) => r.json()).catch(() => ({})),
       ]);
       setDisplayName(
         (profile as { display_name?: string } | null)?.display_name ?? ""
@@ -66,7 +64,6 @@ export default function PengaturanPage() {
           amount: Number(x.amount) || 0,
         }))
       );
-      setGeminiAktif(Boolean((statusRes as { gemini?: boolean }).gemini));
       setStatus("ready");
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -103,34 +100,6 @@ export default function PengaturanPage() {
           💰 Budget — {namaBulan(month)}
         </h3>
         <BudgetForm initial={budgets} />
-      </section>
-
-      {/* Status AI */}
-      <section className="rounded-3xl border border-brand-100 bg-white p-4 shadow-lg shadow-brand-600/5">
-        <h3 className="mb-2 text-sm font-extrabold text-slate-800">
-          🤖 Koneksi Gemini AI
-        </h3>
-        <div
-          className={`flex items-center gap-3 rounded-2xl p-3 ${
-            geminiAktif ? "bg-emerald-50" : "bg-amber-50"
-          }`}
-        >
-          <span className="text-2xl">{geminiAktif ? "✅" : "⚠️"}</span>
-          <div>
-            <p
-              className={`text-sm font-extrabold ${
-                geminiAktif ? "text-emerald-700" : "text-amber-700"
-              }`}
-            >
-              {geminiAktif ? "Terhubung" : "Belum terhubung"}
-            </p>
-            <p className="text-xs text-slate-500">
-              {geminiAktif
-                ? "Insight AI memakai Gemini AI asli ✨"
-                : "Isi GEMINI_API_KEY di env agar insight memakai AI asli. Sementara ini memakai analisis lokal bawaan."}
-            </p>
-          </div>
-        </div>
       </section>
 
       <LogoutButton />

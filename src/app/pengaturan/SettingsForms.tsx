@@ -142,7 +142,7 @@ export function BudgetForm({ initial }: { initial: BudgetVal[] }) {
           {CATEGORIES.map((c) => (
             <div key={c.name} className="flex items-center gap-2">
               <span className="w-28 shrink-0 text-xs font-bold text-slate-600">
-                {c.emoji} {c.name}
+                {c.name}
               </span>
               <RupiahInput
                 value={perCat[c.name]}

@@ -140,10 +140,6 @@ export default function Home() {
   const sapaan = sapaanWaktu();
   const overBudget = totalBudget > 0 && sisa < 0;
 
-  // Jatah harian: sisa budget dibagi sisa hari bulan ini (termasuk hari ini)
-  const sisaHari = Math.max(daysInMonth - new Date().getDate() + 1, 1);
-  const jatahHarian = sisa > 0 ? Math.floor(sisa / sisaHari) : 0;
-
   return (
     <div className="space-y-4">
       {/* Sapaan */}
@@ -212,31 +208,6 @@ export default function Home() {
           )}
         </p>
       </section>
-
-      {/* Jatah harian */}
-      {totalBudget > 0 && (
-        <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-amber-400 via-gold-400 to-amber-500 p-5 text-white shadow-xl shadow-amber-500/25 ring-1 ring-gold-300">
-          <div className="pointer-events-none absolute inset-0">
-            <div className="absolute -right-8 -top-10 h-40 w-40 rounded-full bg-white/20" />
-            <div className="absolute -bottom-10 -left-6 h-28 w-28 rounded-full bg-white/15" />
-            <div className="absolute bottom-4 right-10 text-5xl opacity-25">
-              ☀️
-            </div>
-          </div>
-          <p className="relative text-xs font-bold uppercase tracking-wider text-white/90">
-            ☀️ Jatah hari ini
-          </p>
-          <p className="relative mt-1 text-4xl font-extrabold tracking-tight">
-            {formatRupiah(jatahHarian)}
-            <span className="text-lg font-bold text-white/85">/hari</span>
-          </p>
-          <p className="relative mt-2 text-xs font-semibold text-white/90">
-            {sisa > 0
-              ? `Aman dibelanjain segini tiap hari sampai akhir bulan (${sisaHari} hari lagi) 💪`
-              : "Budget jebol — sisa bulan ini mode bertahan hidup! 🛑"}
-          </p>
-        </section>
-      )}
 
       {list.length === 0 ? (
         <section className="rounded-3xl border-2 border-dashed border-brand-200 bg-white/70 p-6 text-center">
