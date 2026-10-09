@@ -24,13 +24,25 @@ export default function LoginForm() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setLoading(true);
     setError(null);
     setPesan(null);
 
+    // Cegah email yang tidak bisa terima email dari Supabase:
+    // nama email (sebelum @) wajib minimal 6 huruf.
+    const emailBersihAwal = email.trim();
+    const namaEmail = emailBersihAwal.split("@")[0] ?? "";
+    if (mode === "register" && namaEmail.length < 6) {
+      setError(
+        "Nama email (sebelum @) minimal 6 huruf ya, biar bisa terima email verifikasi & reset password dari kami."
+      );
+      return;
+    }
+
+    setLoading(true);
+
     try {
       const supabase = createClient();
-      const emailBersih = email.trim();
+      const emailBersih = emailBersihAwal;
       if (mode === "login") {
         const { error } = await supabase.auth.signInWithPassword({
           email: emailBersih,
