@@ -7,6 +7,7 @@ import { currentMonth, namaBulan } from "@/lib/format";
 import {
   DisplayNameForm,
   BudgetForm,
+  PasswordForm,
   LogoutButton,
 } from "./SettingsForms";
 import SetupNotice from "@/components/SetupNotice";
@@ -100,6 +101,14 @@ export default function PengaturanPage() {
           💰 Budget — {namaBulan(month)}
         </h3>
         <BudgetForm initial={budgets} />
+      </section>
+
+      {/* Keamanan */}
+      <section className="rounded-3xl border border-brand-100 bg-white p-4 shadow-lg shadow-brand-600/5">
+        <h3 className="mb-3 text-sm font-extrabold text-slate-800">
+          🔒 Keamanan
+        </h3>
+        <PasswordForm />
       </section>
 
       <LogoutButton />

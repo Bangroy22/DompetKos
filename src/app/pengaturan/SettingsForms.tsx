@@ -197,3 +197,90 @@ export function LogoutButton() {
     </button>
   );
 }
+
+export function PasswordForm() {
+  const [pw1, setPw1] = useState("");
+  const [pw2, setPw2] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [ok, setOk] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function simpan(e: React.FormEvent) {
+    e.preventDefault();
+    setOk(false);
+    setError(null);
+    if (pw1.length < 6) {
+      setError("Password minimal 6 karakter.");
+      return;
+    }
+    if (pw1 !== pw2) {
+      setError("Konfirmasi password tidak sama. Cek lagi ya.");
+      return;
+    }
+    setSaving(true);
+    try {
+      const supabase = createClient();
+      const { error } = await supabase.auth.updateUser({ password: pw1 });
+      if (error) throw error;
+      setOk(true);
+      setPw1("");
+      setPw2("");
+    } catch (e) {
+      setError(
+        e instanceof Error
+          ? e.message
+          : "Gagal mengubah password. Coba lagi ya."
+      );
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <form onSubmit={simpan} className="space-y-3">
+      <div>
+        <label className="mb-1 block text-xs font-bold text-slate-600">
+          Password baru
+        </label>
+        <input
+          type="password"
+          required
+          minLength={6}
+          value={pw1}
+          onChange={(e) => setPw1(e.target.value)}
+          placeholder="Minimal 6 karakter"
+          className="w-full rounded-2xl border-2 border-slate-200 px-4 py-2.5 text-sm font-semibold outline-none focus:border-brand-400"
+        />
+      </div>
+      <div>
+        <label className="mb-1 block text-xs font-bold text-slate-600">
+          Konfirmasi password baru
+        </label>
+        <input
+          type="password"
+          required
+          minLength={6}
+          value={pw2}
+          onChange={(e) => setPw2(e.target.value)}
+          placeholder="Ketik ulang password baru"
+          className="w-full rounded-2xl border-2 border-slate-200 px-4 py-2.5 text-sm font-semibold outline-none focus:border-brand-400"
+        />
+      </div>
+      {error && (
+        <p className="text-xs font-bold text-rose-600">⚠️ {error}</p>
+      )}
+      {ok && (
+        <p className="text-xs font-bold text-emerald-600">
+          ✅ Password berhasil diubah!
+        </p>
+      )}
+      <button
+        type="submit"
+        disabled={saving}
+        className="w-full rounded-2xl bg-gradient-to-r from-brand-700 to-brand-500 py-3 text-sm font-extrabold text-white shadow-lg shadow-brand-600/25 disabled:opacity-60"
+      >
+        {saving ? "⏳ Menyimpan..." : "🔑 Ubah Password"}
+      </button>
+    </form>
+  );
+}
