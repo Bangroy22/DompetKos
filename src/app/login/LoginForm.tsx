@@ -30,9 +30,10 @@ export default function LoginForm() {
 
     try {
       const supabase = createClient();
+      const emailBersih = email.trim();
       if (mode === "login") {
         const { error } = await supabase.auth.signInWithPassword({
-          email,
+          email: emailBersih,
           password,
         });
         if (error) throw error;
@@ -40,7 +41,7 @@ export default function LoginForm() {
         router.refresh();
       } else {
         const { data, error } = await supabase.auth.signUp({
-          email,
+          email: emailBersih,
           password,
           options: { data: { display_name: nama.trim() || undefined } },
         });
@@ -86,7 +87,9 @@ export default function LoginForm() {
     setPesan(null);
     try {
       const supabase = createClient();
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      const bersih = email.trim();
+      if (!bersih) throw new Error("Isi email kamu dulu ya.");
+      const { error } = await supabase.auth.resetPasswordForEmail(bersih, {
         redirectTo: `${window.location.origin}/auth/callback?next=/reset-password`,
       });
       if (error) throw error;
@@ -214,7 +217,7 @@ export default function LoginForm() {
                 <button
                   type="button"
                   onClick={kirimReset}
-                  disabled={loading || !email}
+                  disabled={loading || !email.trim()}
                   className="flex-1 rounded-xl bg-gradient-to-r from-brand-700 to-brand-500 py-2.5 text-xs font-extrabold text-white shadow-md shadow-brand-600/25 transition active:scale-[0.98] disabled:opacity-60"
                 >
                   {loading ? "⏳ Mengirim..." : "📧 Kirim link reset"}
